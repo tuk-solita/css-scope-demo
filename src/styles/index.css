@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+@import './layout.css';
+@import './editors.css';
+@import './exercises.css';
+
+:root {
+  /* Colors */
+  --bg-color: #0d0d14; /* Deep, sleek dark background */
+  --surface-color: #1a1a2e; /* Card surface */
+  --editor-bg: #141420; /* Slightly darker surface for code */
+  --border-color: #2a2a40;
+  
+  --text-main: #e2e8f0;
+  --text-muted: #94a3b8;
+  
+  /* Accents */
+  --accent-primary: #8b5cf6;
+  --accent-secondary: #c084fc;
+  --accent-gradient: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+  --accent-glow: rgba(139, 92, 246, 0.4);
+
+  /* Status */
+  --success-color: #10b981;
+  --error-color: #ef4444;
+
+  /* Typography */
+  --font-ui: 'Inter', system-ui, sans-serif;
+  --font-code: 'JetBrains Mono', monospace;
+
+  /* Utility */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 10px 15px rgba(0, 0, 0, 0.3);
+  --shadow-glow: 0 0 20px var(--accent-glow);
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-ui);
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1, h2, h3, h4 {
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+button {
+  font-family: var(--font-ui);
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: var(--text-main);
+}
