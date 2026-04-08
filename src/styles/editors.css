@@ -21,6 +21,34 @@
   align-items: center;
 }
 
+.compare-btn {
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-main);
+  font-size: 1rem;
+  line-height: 1;
+  transition: transform var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.compare-btn:hover:not(:disabled),
+.compare-btn:focus-visible {
+  background: rgba(124, 58, 237, 0.18);
+  border-color: rgba(168, 85, 247, 0.6);
+  transform: translateY(-1px);
+}
+
+.compare-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .editor-view {
   flex: 1;
   overflow: auto;

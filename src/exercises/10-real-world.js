@@ -50,6 +50,20 @@ export default {
     padding: 1rem;
   }
 }`,
+  legacyCss: `.dashboard {
+  background-color: #f0f4f8;
+  padding: 2rem;
+}
+
+.dashboard > h1 {
+  color: #0369a1;
+}
+
+.dashboard > .widget {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1rem;
+}`,
   checks: [
     { type: 'cssContains', pattern: '@scope.*?to', message: 'A "to" clause is needed to prevent bleed into the legacy view' },
     { type: 'hasComputedStyle', selector: '.dashboard', property: 'backgroundColor', expected: 'rgb(240, 244, 248)', message: 'Dashboard background is #f0f4f8' },

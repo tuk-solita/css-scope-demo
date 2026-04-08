@@ -44,6 +44,12 @@ export default {
 @scope (.dark-theme) {
   p { color: white; }
 }`,
+  legacyCss: `/* The background colors are set for you */
+.light-theme { background: #cccccc; padding: 1rem; border: 1px solid #999; }
+.dark-theme { background: #333333; padding: 1rem; border: 1px solid #111; }
+
+.light-theme > p { color: black; }
+.dark-theme > p { color: white; }`,
   checks: [
     { type: 'cssContains', pattern: '@scope\\s*\\(\\s*\\.light-theme\\s*\\)', message: 'Define a scope for .light-theme' },
     { type: 'cssContains', pattern: '@scope\\s*\\(\\s*\\.dark-theme\\s*\\)', message: 'Define a scope for .dark-theme' },

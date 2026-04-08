@@ -46,6 +46,20 @@ export default {
     color: gray;
   }
 }`,
+  legacyCss: `.card {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.card .title {
+  font-size: 1.5rem;
+  color: navy;
+}
+
+.card .body {
+  color: gray;
+}`,
   checks: [
     { type: 'cssContains', pattern: '@scope\\s*\\(\\s*\\.card\\s*\\)', message: 'Use @scope targeting .card' },
     { type: 'hasComputedStyle', selector: '.card .title', property: 'color', expected: 'rgb(0, 0, 128)', message: 'Card title should be navy (rgb(0,0,128))' },

@@ -35,6 +35,10 @@ export default {
     border-radius: 8px;
   }
 }`,
+  legacyCss: `.article-body > img {
+  border: 3px solid coral;
+  border-radius: 8px;
+}`,
   checks: [
     { type: 'cssContains', pattern: 'to\\s*\\(\\s*figure\\s*\\)', message: 'Use the "to" keyword and "figure" as the scope limit' },
     { type: 'hasComputedStyle', selector: '.article-body > img', property: 'borderColor', expected: 'rgb(255, 127, 80)', message: 'Article body images should have the coral border' },

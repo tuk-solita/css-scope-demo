@@ -21,6 +21,7 @@
  * @property {string} [goalHtml] - solved HTML for the goal preview (when HTML is editable)
  * @property {string} starterCss
  * @property {string} goalCss
+ * @property {string} legacyCss
  * @property {Check[]} checks
  * @property {string[]} hints
  */

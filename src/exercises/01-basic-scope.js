@@ -27,6 +27,9 @@ export default {
     color: blue;
   }
 }`,
+  legacyCss: `.card p {
+  color: blue;
+}`,
   checks: [
     { type: 'cssContains', pattern: '@scope\\s*\\(\\s*\\.card\\s*\\)', message: 'Use @scope with .card as the scope root' },
     { type: 'hasComputedStyle', selector: '.card p', property: 'color', expected: 'rgb(0, 0, 255)', message: 'Paragraphs inside .card should be blue' },

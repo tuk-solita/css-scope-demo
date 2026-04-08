@@ -32,6 +32,11 @@ export default {
     color: cadetblue;
   }
 }`,
+  legacyCss: `.hero h2,
+.footer h2 {
+  letter-spacing: 2px;
+  color: cadetblue;
+}`,
   checks: [
     { type: 'cssContains', pattern: '@scope\\s*\\(.*\\.hero.*,.*\\.footer.*\\)', message: 'Use a comma-separated selector list for the scope root' },
     { type: 'hasComputedStyle', selector: '.hero h2', property: 'color', expected: 'rgb(95, 158, 160)', message: 'Hero h2 should be cadetblue' },

@@ -37,6 +37,15 @@ export default {
     color: purple;
   }
 }`,
+  legacyCss: `.card {
+  border: 2px solid purple;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.card h2 {
+  color: purple;
+}`,
   checks: [
     { type: 'cssContains', pattern: ':scope\\s*\\{', message: 'Use the :scope pseudo-class to style the root' },
     { type: 'hasComputedStyle', selector: '.card', property: 'borderColor', expected: 'rgb(128, 0, 128)', message: 'The .card should have a purple border' },

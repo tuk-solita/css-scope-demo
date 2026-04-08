@@ -187,6 +187,122 @@
   gap: 0.75rem;
 }
 
+.compare-dialog[hidden] {
+  display: none;
+}
+
+.compare-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(15, 15, 26, 0.76);
+  backdrop-filter: blur(8px);
+}
+
+.compare-dialog-panel {
+  width: min(1100px, 100%);
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.compare-dialog-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.compare-dialog-title {
+  margin: 0;
+  font-size: 1.15rem;
+  color: white;
+}
+
+.compare-dialog-subtitle {
+  margin: 0.35rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.compare-dialog-close {
+  width: 2.25rem;
+  height: 2.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-main);
+  font-size: 1.1rem;
+}
+
+.compare-dialog-close:hover,
+.compare-dialog-close:focus-visible {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.compare-dialog-body {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 1rem 1.25rem 1.25rem;
+  overflow: auto;
+}
+
+.compare-pane {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  outline: none;
+}
+
+.compare-pane:focus-visible {
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.45);
+}
+
+.compare-pane-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.compare-pane-editor {
+  min-height: 18rem;
+  max-height: 100%;
+  overflow: auto;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--editor-bg);
+}
+
+.compare-pane-editor.is-readonly {
+  opacity: 0.92;
+}
+
+.compare-pane-editor .cm-editor {
+  min-height: 100%;
+}
+
+body.compare-dialog-open {
+  overflow: hidden;
+}
+
 /* Validation Checklist */
 .validation-checklist {
   display: flex;
@@ -234,4 +350,19 @@
   0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
   70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
   100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+
+@media (max-width: 900px) {
+  .compare-dialog {
+    padding: 1rem;
+  }
+
+  .compare-dialog-body {
+    grid-template-columns: 1fr;
+  }
+
+  .compare-pane-editor {
+    min-height: 14rem;
+    max-height: none;
+  }
 }

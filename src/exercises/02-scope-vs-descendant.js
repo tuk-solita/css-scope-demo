@@ -41,6 +41,11 @@ export default {
     text-decoration: none;
   }
 }`,
+  legacyCss: `.nav a {
+  color: coral;
+  font-weight: bold;
+  text-decoration: none;
+}`,
   checks: [
     { type: 'cssContains', pattern: '@scope\\s*\\(\\s*\\.nav\\s*\\)', message: 'Use @scope with .nav as the scope root' },
     { type: 'cssNotContains', pattern: 'header\\s+a', message: 'Remove the leaky header a descendant selector' },

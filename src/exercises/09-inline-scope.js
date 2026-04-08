@@ -44,6 +44,9 @@ export default {
    Write your CSS directly in the HTML editor inside a <style> block!
 */`,
   goalCss: `/* Goal is rendered via the inline <style> in goalHtml */`,
+  legacyCss: `.card p {
+  color: crimson;
+}`,
   checks: [
     { type: 'hasComputedStyle', selector: '.card p', property: 'color', expected: 'rgb(220, 20, 60)', message: 'The card paragraph should be crimson.' },
     { type: 'hasNoComputedStyle', selector: '.other p', property: 'color', notExpected: 'rgb(220, 20, 60)', message: 'The other paragraph should NOT be styled.' },

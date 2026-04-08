@@ -6,8 +6,11 @@ import { runChecks } from './validation/checker.js';
 import { createProgress } from './ui/progress.js';
 import { createInstructions } from './ui/instructions.js';
 import { createGoalPreview } from './ui/goal-preview.js';
+import { createCompareDialog } from './ui/compare-dialog.js';
 
 const STORAGE_KEY = 'scope-lab-progress';
+const COMPARE_BUTTON_LABEL = 'Compare with legacy CSS';
+const COMPARE_DISABLED_LABEL = 'Legacy CSS comparison unavailable for this exercise';
 
 function loadState() {
   try {
@@ -42,7 +45,16 @@ async function init() {
       <div class="editor-view" id="html-editor-view"></div>
     </div>
     <div class="editor-container" id="css-editor-container">
-      <div class="editor-header">CSS</div>
+      <div class="editor-header">
+        <span>CSS</span>
+        <button
+          id="btn-compare"
+          class="compare-btn"
+          type="button"
+          aria-label="${COMPARE_BUTTON_LABEL}"
+          title="${COMPARE_BUTTON_LABEL}"
+        >⇆</button>
+      </div>
       <div class="editor-view" id="css-editor-view"></div>
     </div>
   `;
@@ -81,6 +93,12 @@ async function init() {
 
   const userPreview = createPreview(document.getElementById('user-preview-view'));
   const goalPreview = createGoalPreview(document.getElementById('goal-preview-view'));
+  const compareDialog = createCompareDialog(document.body);
+  const compareButton = document.getElementById('btn-compare');
+
+  if (!compareButton) {
+    throw new Error('Compare button was not rendered.');
+  }
 
   const htmlEditor = createHtmlEditor(document.getElementById('html-editor-view'), {
     onChange: (doc) => {
@@ -109,6 +127,8 @@ async function init() {
     saveState(state);
 
     const ex = exercises[currentIndex];
+    compareDialog.close();
+    compareDialog.setExercise(ex);
     
     // UI updates
     instructionsUI.update(ex);
@@ -125,6 +145,10 @@ async function init() {
 
     userPreview.update(htmlEditor.getDoc(), cssEditor.getDoc());
     goalPreview.update(ex.goalHtml || ex.html, ex.goalCss);
+
+    compareButton.disabled = !ex.legacyCss;
+    compareButton.title = ex.legacyCss ? COMPARE_BUTTON_LABEL : COMPARE_DISABLED_LABEL;
+    compareButton.setAttribute('aria-label', ex.legacyCss ? COMPARE_BUTTON_LABEL : COMPARE_DISABLED_LABEL);
 
     // Nav buttons
     document.getElementById('btn-prev').disabled = currentIndex === 0;
@@ -145,6 +169,16 @@ async function init() {
   // Buttons wiring
   document.getElementById('btn-prev').addEventListener('click', () => loadExercise(currentIndex - 1));
   document.getElementById('btn-next').addEventListener('click', () => loadExercise(currentIndex + 1));
+  compareButton.addEventListener('click', () => {
+    const ex = exercises[currentIndex];
+
+    if (!ex?.legacyCss) {
+      return;
+    }
+
+    compareDialog.setUserCss(cssEditor.getDoc());
+    compareDialog.open();
+  });
   
   document.getElementById('btn-reset').addEventListener('click', () => {
     if (!confirm('Are you sure you want to reset this exercise to the starting code?')) return;

@@ -46,6 +46,15 @@ export default {
     color: green;
   }
 }`,
+  legacyCss: `.article > p,
+.article > .sidebar {
+  border-left: 3px solid green;
+  padding-left: 0.5rem;
+}
+
+.article > p {
+  color: green;
+}`,
   checks: [
     { type: 'cssContains', pattern: 'to\\s*\\(\\s*\\.sidebar\\s*>\\s*\\*\\s*\\)', message: 'Use `.sidebar > *` as the scope limit' },
     { type: 'hasComputedStyle', selector: '.article > p', property: 'color', expected: 'rgb(0, 128, 0)', message: 'Article intro paragraph should be green' },
