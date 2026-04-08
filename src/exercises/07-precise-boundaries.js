@@ -4,47 +4,57 @@ export default {
   tier: 2,
   concept: '✂️ Exclusive Limits',
   instructions: `
-    By default, a donut scope includes the scope root elements, but <strong>excludes</strong> the scope limit element. 
-    You can use the <code>&gt; *</code> universal child selector to modify this!
+    By default, the scope limit element is <strong>excluded</strong> from the scope — 
+    it and everything inside it are out of bounds.
+    You can use the <code>&gt; *</code> universal child selector to shift the boundary inward, 
+    making the limit element itself <strong>included</strong> while its children remain excluded.
     <br><br>
-    The page below has an <code>.article</code> with nested <code>.component</code> sections. 
-    We want to style all paragraphs inside the article, but right now the first paragraph of each component 
-    (the component itself) is getting excluded because it acts as the scope limit.
+    Below, we want to highlight elements inside <code>.article</code> with a green left border. 
+    The <code>.sidebar</code> container should also get the border to show it belongs to the article, 
+    but the sidebar's inner content should remain unstyled.
     <br><br>
-    Fix the bounds in the ` + "`to`" + ` clause so that the scope limit itself is **included** in the scope, but its children are not.
+    Right now <code>to (.sidebar)</code> excludes the sidebar container entirely — it has no border. 
+    Fix the <code>to</code> clause so that <code>.sidebar</code> itself is <strong>included</strong> in the scope, 
+    but its children are excluded.
   `,
   html: `<article class="article">
   <p>Article introduction paragraph.</p>
-  
-  <div class="component">
-    <p>This component is the limit. It SHOULD be styled.</p>
-    <div class="component-inner">
-      <p>This is INSIDE the limit. It should NOT be styled.</p>
-    </div>
+
+  <div class="sidebar">
+    <p>Sidebar content. Should NOT be highlighted.</p>
   </div>
 </article>`,
   htmlEditable: false,
-  starterCss: `/* The current scope limit entirely excludes .component.
-   Change the limit to exclude ONLY its children! */
-@scope (.article) to (.component) {
+  starterCss: `/* .sidebar itself should be IN scope (get the border),
+   but its children should be OUT of scope.
+   How can you shift the limit boundary inward? */
+@scope (.article) to (.sidebar) {
+  :is(p, div) {
+    border-left: 3px solid green;
+    padding-left: 0.5rem;
+  }
   p {
     color: green;
   }
 }`,
-  goalCss: `@scope (.article) to (.component > *) {
+  goalCss: `@scope (.article) to (.sidebar > *) {
+  :is(p, div) {
+    border-left: 3px solid green;
+    padding-left: 0.5rem;
+  }
   p {
     color: green;
   }
 }`,
   checks: [
-    { type: 'cssContains', pattern: 'to\\s*\\(\\s*\\.component\\s*>\\s*\\*\\s*\\)', message: 'Use `.component > *` as the scope limit' },
-    { type: 'hasComputedStyle', selector: '.article > p', property: 'color', expected: 'rgb(0, 128, 0)', message: 'Article intro p should be green' },
-    { type: 'hasComputedStyle', selector: '.component > p', property: 'color', expected: 'rgb(0, 128, 0)', message: 'The component limit p should be green too' },
-    { type: 'hasNoComputedStyle', selector: '.component-inner p', property: 'color', notExpected: 'rgb(0, 128, 0)', message: 'Paragraphs deeper inside component should NOT be styled' },
+    { type: 'cssContains', pattern: 'to\\s*\\(\\s*\\.sidebar\\s*>\\s*\\*\\s*\\)', message: 'Use `.sidebar > *` as the scope limit' },
+    { type: 'hasComputedStyle', selector: '.article > p', property: 'color', expected: 'rgb(0, 128, 0)', message: 'Article intro paragraph should be green' },
+    { type: 'hasComputedStyle', selector: '.sidebar', property: 'borderLeftColor', expected: 'rgb(0, 128, 0)', message: 'Sidebar container should have a green border (included in scope)' },
+    { type: 'hasNoComputedStyle', selector: '.sidebar p', property: 'color', notExpected: 'rgb(0, 128, 0)', message: 'Sidebar content should NOT be green (excluded from scope)' },
   ],
   hints: [
-    '`@scope (.root) to (.limit)` means `.limit` is excluded.',
-    '`@scope (.root) to (.limit > *)` means `.limit` is INCLUDED, but its children are excluded.',
-    'Change the to clause to `to (.component > *)`',
+    '`to (.limit)` excludes `.limit` itself from the scope.',
+    '`to (.limit > *)` shifts the boundary: `.limit` is now IN scope, but its direct children become the new (exclusive) limits.',
+    'Change the to clause to `to (.sidebar > *)`',
   ],
 };

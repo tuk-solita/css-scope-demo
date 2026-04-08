@@ -25,10 +25,25 @@ export default {
   <p>I should remain completely unstyled.</p>
 </div>`,
   htmlEditable: true,
+  goalHtml: `<div class="card">
+  <h2>Inline Scoped Component</h2>
+  <p>I should have crimson text.</p>
+
+  <style>
+    @scope {
+      p { color: crimson; }
+    }
+  </style>
+
+</div>
+
+<div class="other">
+  <p>I should remain completely unstyled.</p>
+</div>`,
   starterCss: `/* Leave this blank. 
    Write your CSS directly in the HTML editor inside a <style> block!
 */`,
-  goalCss: `/* The goal is evaluated via the HTML injects */`,
+  goalCss: `/* Goal is rendered via the inline <style> in goalHtml */`,
   checks: [
     { type: 'hasComputedStyle', selector: '.card p', property: 'color', expected: 'rgb(220, 20, 60)', message: 'The card paragraph should be crimson.' },
     { type: 'hasNoComputedStyle', selector: '.other p', property: 'color', notExpected: 'rgb(220, 20, 60)', message: 'The other paragraph should NOT be styled.' },

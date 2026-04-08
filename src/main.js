@@ -124,7 +124,7 @@ async function init() {
     cssEditor.setDoc(savedCss || ex.starterCss);
 
     userPreview.update(htmlEditor.getDoc(), cssEditor.getDoc());
-    goalPreview.update(ex.html, ex.goalCss);
+    goalPreview.update(ex.goalHtml || ex.html, ex.goalCss);
 
     // Nav buttons
     document.getElementById('btn-prev').disabled = currentIndex === 0;
