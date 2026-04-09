@@ -23,7 +23,7 @@ export default {
   </section>
 </article>`,
   htmlEditable: false,
-  starterCss: `@scope (.article-body) ____ {
+  starterCss: `@scope (.article-body) {
   img {
     border: 3px solid coral;
     border-radius: 8px;

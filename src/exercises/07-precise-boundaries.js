@@ -13,8 +13,7 @@ export default {
     The <code>.sidebar</code> container should also get the border to show it belongs to the article, 
     but the sidebar's inner content should remain unstyled.
     <br><br>
-    Right now <code>to (.sidebar)</code> excludes the sidebar container entirely — it has no border. 
-    Fix the <code>to</code> clause so that <code>.sidebar</code> itself is <strong>included</strong> in the scope, 
+    Add a <code>to</code> clause so that <code>.sidebar</code> itself is <strong>included</strong> in the scope, 
     but its children are excluded.
   `,
   html: `<article class="article">
@@ -28,7 +27,7 @@ export default {
   starterCss: `/* .sidebar itself should be IN scope (get the border),
    but its children should be OUT of scope.
    How can you shift the limit boundary inward? */
-@scope (.article) to (.sidebar) {
+@scope (.article) {
   :is(p, div) {
     border-left: 3px solid green;
     padding-left: 0.5rem;
