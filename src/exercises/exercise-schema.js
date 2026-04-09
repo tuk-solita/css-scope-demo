@@ -18,6 +18,7 @@
  * @property {string} instructions
  * @property {string} html
  * @property {boolean} [htmlEditable=false]
+ * @property {number} [revision=1] - bump when starter HTML/CSS changes and old saved drafts should reset
  * @property {string} [goalHtml] - solved HTML for the goal preview (when HTML is editable)
  * @property {string} starterCss
  * @property {string} goalCss

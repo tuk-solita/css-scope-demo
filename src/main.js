@@ -11,6 +11,7 @@ import { createCompareDialog } from './ui/compare-dialog.js';
 const STORAGE_KEY = 'scope-lab-progress';
 const COMPARE_BUTTON_LABEL = 'Compare with legacy CSS';
 const COMPARE_DISABLED_LABEL = 'Legacy CSS comparison unavailable for this exercise';
+const DEFAULT_EXERCISE_REVISION = 1;
 
 function loadState() {
   try {
@@ -24,6 +25,39 @@ function saveState(state) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
+function getExerciseRevision(exercise) {
+  return exercise.revision ?? DEFAULT_EXERCISE_REVISION;
+}
+
+function syncExerciseDraft(state, exercise) {
+  if (!state.exerciseRevisions) state.exerciseRevisions = {};
+
+  const revision = getExerciseRevision(exercise);
+  const savedRevision = state.exerciseRevisions[exercise.id] ?? DEFAULT_EXERCISE_REVISION;
+  const hasSavedDraft =
+    Object.prototype.hasOwnProperty.call(state.userHtml, exercise.id) ||
+    Object.prototype.hasOwnProperty.call(state.userCss, exercise.id);
+
+  let changed = false;
+
+  if (hasSavedDraft && savedRevision !== revision) {
+    state.userHtml[exercise.id] = exercise.html;
+    state.userCss[exercise.id] = exercise.starterCss;
+    changed = true;
+  }
+
+  if (state.exerciseRevisions[exercise.id] !== revision) {
+    state.exerciseRevisions[exercise.id] = revision;
+    changed = true;
+  }
+
+  return {
+    html: state.userHtml[exercise.id] ?? exercise.html,
+    css: state.userCss[exercise.id] ?? exercise.starterCss,
+    changed,
+  };
+}
+
 async function init() {
   const exercises = getAllExercises();
   const state = loadState();
@@ -31,6 +65,7 @@ async function init() {
   if (!state.completed) state.completed = [];
   if (!state.userCss) state.userCss = {};
   if (!state.userHtml) state.userHtml = {};
+  if (!state.exerciseRevisions) state.exerciseRevisions = {};
 
   const appHeader = document.getElementById('app-header');
   const instPanelContainer = document.getElementById('instructions-panel');
@@ -103,6 +138,7 @@ async function init() {
   const htmlEditor = createHtmlEditor(document.getElementById('html-editor-view'), {
     onChange: (doc) => {
       const ex = exercises[currentIndex];
+      state.exerciseRevisions[ex.id] = getExerciseRevision(ex);
       state.userHtml[ex.id] = doc;
       saveState(state);
       if (userPreview) userPreview.update(doc, cssEditor ? cssEditor.getDoc() : '');
@@ -112,6 +148,7 @@ async function init() {
   const cssEditor = createCssEditor(document.getElementById('css-editor-view'), {
     onChange: (doc) => {
       const ex = exercises[currentIndex];
+      state.exerciseRevisions[ex.id] = getExerciseRevision(ex);
       state.userCss[ex.id] = doc;
       saveState(state);
       if (userPreview) userPreview.update(htmlEditor ? htmlEditor.getDoc() : '', doc);
@@ -135,13 +172,16 @@ async function init() {
     document.getElementById('validation-checklist').style.display = 'none';
     
     // Load content
-    const savedHtml = state.userHtml[ex.id];
-    const savedCss = state.userCss[ex.id];
-    
-    htmlEditor.setDoc(savedHtml || ex.html);
+    const draft = syncExerciseDraft(state, ex);
+
+    if (draft.changed) {
+      saveState(state);
+    }
+
+    htmlEditor.setDoc(draft.html);
     htmlEditor.setReadOnly(!ex.htmlEditable);
-    
-    cssEditor.setDoc(savedCss || ex.starterCss);
+
+    cssEditor.setDoc(draft.css);
 
     userPreview.update(htmlEditor.getDoc(), cssEditor.getDoc());
     goalPreview.update(ex.goalHtml || ex.html, ex.goalCss);
@@ -183,6 +223,7 @@ async function init() {
   document.getElementById('btn-reset').addEventListener('click', () => {
     if (!confirm('Are you sure you want to reset this exercise to the starting code?')) return;
     const ex = exercises[currentIndex];
+    state.exerciseRevisions[ex.id] = getExerciseRevision(ex);
     state.userHtml[ex.id] = ex.html;
     state.userCss[ex.id] = ex.starterCss;
     saveState(state);
