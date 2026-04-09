@@ -104,7 +104,7 @@ HTML is read-only. CSS editor has minimal or no starter code.
 
 | # | Title | Concept Taught | Task |
 |---|-------|---------------|------|
-| 5 | Nested Themes | Scope proximity | Write `@scope` rules for nested `.light-theme`/`.dark-theme` so closest theme wins |
+| 5 | Nearest Ancestor Problem | Scope proximity | Show why `.light-theme a` and `.dark-theme a` fall back to source order, then replace them with `@scope` so the nearest themed ancestor wins |
 | 6 | Component Isolation | Scoping for components | Scope `.title` and `.body` classes inside `.card` so they don't collide with global uses |
 | 7 | Precise Boundaries | Inclusive/exclusive bounds with `> *` | Adjust scope boundaries to include or exclude the limit element |
 | 8 | Multiple Scope Roots | Selector lists as scope root | Write one `@scope` rule that applies to both `.hero` and `.article-body` |

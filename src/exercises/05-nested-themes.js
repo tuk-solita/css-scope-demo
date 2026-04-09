@@ -1,65 +1,76 @@
 export default {
   id: 'nested-themes',
-  title: 'Nested Themes',
+  title: 'Nearest Ancestor Problem',
   tier: 2,
   concept: '📏 Scope Proximity',
+  revision: 4,
   instructions: `
-    When two scopes conflict, <code>@scope</code> introduces a new criterion: <strong>Scoping Proximity</strong>.
-    The rule that is physically closer in the DOM tree wins, regardless of source order!
+    Ancestor selectors can limit where a rule applies, but they do <em>not</em> prefer the nearest ancestor.
+    In legacy CSS, <code>.light-theme a</code> and <code>.dark-theme a</code> have the same specificity, so source order decides the winner.
     <br><br>
-    The editor has nested light and dark theme components. Write two separate <code>@scope</code> blocks 
-    for <code>.light-theme</code> and <code>.dark-theme</code>. Give each one a white or black text color for 
-    the <code>p</code> element. Watch how proximity correctly colors the innermost component!
+    Write two separate <code>@scope</code> blocks for <code>.light-theme</code> and <code>.dark-theme</code> so link colors follow the nearest themed ancestor instead.
+    The outer dark theme link should be <strong>hotpink</strong>, the nested light theme link should turn <strong>rebeccapurple</strong>, and the innermost dark theme link should switch <strong>back to hotpink</strong> thanks to <strong>scope proximity</strong>.
   `,
-  html: `<div class="light-theme">
-  <p>Light theme text (should be black)</p>
-  
+  html: `<div class="dark-theme">
+  <a href="#">This link should be hotpink</a>
+
+  <div class="light-theme">
+    <a href="#">This link should be rebeccapurple</a>
+  </div>
+</div>
+<div class="light-theme">
+  <a href="#">This link should be rebeccapurple</a>
+
   <div class="dark-theme">
-    <p>Dark theme text (should be white)</p>
-    
-    <div class="light-theme">
-      <p>Light theme text (should be black)</p>
-    </div>
+    <a href="#">This link should be hotpink</a>
   </div>
 </div>`,
   htmlEditable: false,
-  starterCss: `/* The background colors are set for you */
-.light-theme { background: #cccccc; padding: 1rem; border: 1px solid #999; }
-.dark-theme { background: #333333; padding: 1rem; border: 1px solid #111; }
+  starterCss: `/* Layout styles are set for you */
+.dark-theme { background: #221c2b; color: #f3ecff; padding: 1rem; border-radius: 0.75rem; }
+.light-theme { background: #f5efff; color: #2a2135; padding: 1rem; border-radius: 0.75rem; margin-top: 1rem; }
+a { font-weight: 600; }
 
 /* Add your @scope rules here:
-   - For .light-theme, p should be colored black
-   - For .dark-theme, p should be colored white 
+   - Links inside .dark-theme should be hotpink
+   - Links inside .light-theme should be rebeccapurple
+   - The innermost dark-theme link should flip back to hotpink automatically
 */
 
 `,
-  goalCss: `/* The background colors are set for you */
-.light-theme { background: #cccccc; padding: 1rem; border: 1px solid #999; }
-.dark-theme { background: #333333; padding: 1rem; border: 1px solid #111; }
-
-@scope (.light-theme) {
-  p { color: black; }
-}
+  goalCss: `/* Layout styles are set for you */
+.dark-theme { background: #221c2b; color: #f3ecff; padding: 1rem; border-radius: 0.75rem; }
+.light-theme { background: #f5efff; color: #2a2135; padding: 1rem; border-radius: 0.75rem; margin-top: 1rem; }
+a { font-weight: 600; }
 
 @scope (.dark-theme) {
-  p { color: white; }
-}`,
-  legacyCss: `/* The background colors are set for you */
-.light-theme { background: #cccccc; padding: 1rem; border: 1px solid #999; }
-.dark-theme { background: #333333; padding: 1rem; border: 1px solid #111; }
+  a { color: hotpink; }
+}
 
-.light-theme > p { color: black; }
-.dark-theme > p { color: white; }`,
+@scope (.light-theme) {
+  a { color: rebeccapurple; }
+}`,
+  legacyCss: `/* Layout styles are set for you */
+.dark-theme { background: #221c2b; color: #f3ecff; padding: 1rem; border-radius: 0.75rem; }
+.light-theme { background: #f5efff; color: #2a2135; padding: 1rem; border-radius: 0.75rem; margin-top: 1rem; }
+a { font-weight: 600; }
+
+/* Legacy CSS needs extra descendant selectors for each nesting pattern */
+.light-theme a { color: rebeccapurple; }
+.dark-theme a { color: hotpink; }
+.dark-theme .light-theme a { color: rebeccapurple; }
+.light-theme .dark-theme a { color: hotpink; }`,
   checks: [
-    { type: 'cssContains', pattern: '@scope\\s*\\(\\s*\\.light-theme\\s*\\)', message: 'Define a scope for .light-theme' },
     { type: 'cssContains', pattern: '@scope\\s*\\(\\s*\\.dark-theme\\s*\\)', message: 'Define a scope for .dark-theme' },
-    { type: 'hasComputedStyle', selector: '.light-theme > p', property: 'color', expected: 'rgb(0, 0, 0)', message: 'Top-level light theme paragraph should be black' },
-    { type: 'hasComputedStyle', selector: '.dark-theme > p', property: 'color', expected: 'rgb(255, 255, 255)', message: 'Nested dark theme paragraph should be white' },
-    { type: 'hasComputedStyle', selector: '.dark-theme .light-theme > p', property: 'color', expected: 'rgb(0, 0, 0)', message: 'Innermost light theme paragraph should be black' },
+    { type: 'cssContains', pattern: '@scope\\s*\\(\\s*\\.light-theme\\s*\\)', message: 'Define a scope for .light-theme' },
+    { type: 'hasComputedStyle', selector: '.dark-theme > a', property: 'color', expected: 'rgb(255, 105, 180)', message: 'The outer dark theme link should be hotpink' },
+    { type: 'hasComputedStyle', selector: '.dark-theme .light-theme > a', property: 'color', expected: 'rgb(102, 51, 153)', message: 'The nested light theme link should turn back to rebeccapurple' },
+    { type: 'hasComputedStyle', selector: '.dark-theme .light-theme .dark-theme > a', property: 'color', expected: 'rgb(255, 105, 180)', message: 'The innermost dark theme link should switch back to hotpink' },
   ],
   hints: [
     'You need two separate `@scope` rules.',
-    '`@scope (.light-theme) { p { color: black; } }`',
-    '`@scope (.dark-theme) { p { color: white; } }`',
+    'Both rules should target the nested `a`, not the theme container itself.',
+    '`@scope (.dark-theme) { a { color: hotpink; } }`',
+    '`@scope (.light-theme) { a { color: rebeccapurple; } }`',
   ],
 };
