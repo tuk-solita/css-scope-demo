@@ -3,59 +3,113 @@ export default {
   title: 'Real-World Challenge',
   tier: 3,
   concept: '🏆 Grand Finale',
+  revision: 3,
   instructions: `
-    Time to put everything together! Below is a messy HTML structure for a dashboard page.
+    Time to put everything together! Below is a dashboard page with a main workspace, a sidebar card, nested themes, and a legacy area that needs careful boundaries.
     <br><br>
-    You need to write scoped styles to achieve the following:
+    This capstone is about combining <strong>multiple roots</strong>, careful scope boundaries, and <strong>scope proximity</strong> without the exercise spelling out the exact rule shapes for you.
+    <br><br>
+    Use scoped styles to achieve the following:
     <ul>
-      <li>Make the <code>.dashboard</code> background <code>#f0f4f8</code> and pad it with <code>2rem</code> inside a <code>@scope</code> root for <code>.dashboard</code></li>
-      <li>Inside the dashboard scope, make all <code>.widget</code> elements have a white background, a <code>border-radius: 8px</code>, and <code>padding: 1rem</code></li>
-      <li>However, there is a nested <code>.legacy-view</code> element inside the dashboard! Create a scope limit to <strong>prevent</strong> dashboard styles from bleeding into the legacy view. Ensure the <code>.widget</code> inside the legacy view stays unstyled by the dashboard.</li>
-      <li>Give the <code>.dashboard</code> title (the h1) a color of <code>#0369a1</code>, but make sure the <code>h1</code> in the legacy view isn't affected.</li>
+      <li>The two outer panels should share the same soft surface treatment: background <code>#f0f4f8</code>, <code>padding: 2rem</code>, and <code>border-radius: 16px</code>.</li>
+      <li>The main dashboard heading and the sidebar heading should both use <code>#0369a1</code>. Regular widgets in the modern area should look like white cards with <code>border-radius: 8px</code> and <code>padding: 1rem</code>.</li>
+      <li>The legacy section should only receive shell-level styling: its outer box gets a dashed border in <code>#94a3b8</code> with <code>padding: 1rem</code>, but the inner legacy widget should stay untouched by the modern card styling.</li>
+      <li>The light and dark theme wrappers should control the color of <code>.title</code> and <code>.value</code> based on the <em>nearest</em> themed ancestor: light theme text should use <code>#0f172a</code>, while the dark theme should use a background of <code>#0f172a</code> with <strong>white text</strong>. The nested light note inside the dark widget should switch back to the light-theme text color.</li>
     </ul>
     Both editors are unlocked! Good luck.
   `,
   html: `<div class="dashboard">
   <h1>Analytics Dashboard</h1>
-  
-  <div class="widget">
-    <h3>Monthly Users</h3>
-    <p>1,245</p>
+
+  <div class="widget theme-light">
+    <h3 class="title">Monthly Users</h3>
+    <p class="value">1,245</p>
   </div>
-  
-  <div class="legacy-view">
-    <h1>Old Reports (Do Not Style)</h1>
-    <div class="widget">
-      <h3>Broken Data</h3>
-      <p>N/A</p>
+
+  <div class="widget theme-dark">
+    <h3 class="title">Conversion Health</h3>
+    <p class="value">87%</p>
+
+    <div class="theme-light note">
+      <p class="title">Nested note</p>
+      <p class="value">Follow-up is trending positive.</p>
     </div>
   </div>
-</div>`,
+
+  <div class="legacy-view">
+    <h2>Old Reports (Keep the shell, not the inner styles)</h2>
+    <div class="widget">
+      <h3 class="title">Broken Data</h3>
+      <p class="value">N/A</p>
+    </div>
+  </div>
+</div>
+
+<aside class="dashboard-sidebar">
+  <h2>Team Notes</h2>
+  <p>Ship the scoped refresh today.</p>
+</aside>`,
   htmlEditable: true,
-  starterCss: `/* Your final test. Write your @scope rules here. */
+  starterCss: `/* Your final test.
+   Build the scoped solution from scratch.
+   The HTML contains all the selectors you need.
+*/
 `,
-  goalCss: `@scope (.dashboard) to (.legacy-view) {
+  goalCss: `@scope (.dashboard, .dashboard-sidebar) to (.legacy-view > *) {
   :scope {
     background-color: #f0f4f8;
     padding: 2rem;
+    border-radius: 16px;
   }
-  
-  h1 {
+
+  :is(h1, h2) {
     color: #0369a1;
   }
-  
+
   .widget {
     background-color: white;
     border-radius: 8px;
     padding: 1rem;
   }
-}`,
-  legacyCss: `.dashboard {
-  background-color: #f0f4f8;
-  padding: 2rem;
+
+  .legacy-view {
+    border: 2px dashed #94a3b8;
+    padding: 1rem;
+  }
 }
 
-.dashboard > h1 {
+@scope (.theme-light) {
+  .title,
+  .value {
+    color: #0f172a;
+  }
+}
+
+@scope (.theme-dark) {
+  :scope {
+    background-color: #0f172a;
+  }
+
+  .title,
+  .value {
+    color: white;
+  }
+
+  .note {
+    background-color: #f8fafc;
+    border-radius: 8px;
+    padding: 1rem;
+  }
+}`,
+  legacyCss: `.dashboard,
+.dashboard-sidebar {
+  background-color: #f0f4f8;
+  padding: 2rem;
+  border-radius: 16px;
+}
+
+.dashboard > h1,
+.dashboard-sidebar h2 {
   color: #0369a1;
 }
 
@@ -63,18 +117,55 @@ export default {
   background-color: white;
   border-radius: 8px;
   padding: 1rem;
+}
+
+.dashboard > .legacy-view {
+  border: 2px dashed #94a3b8;
+  padding: 1rem;
+}
+
+.theme-light .title,
+.theme-light .value {
+  color: #0f172a;
+}
+
+.theme-dark .title,
+.theme-dark .value {
+  color: white;
+}
+
+.theme-dark {
+  background-color: #0f172a;
+}
+
+.theme-dark .note {
+  background-color: #f8fafc;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.theme-dark .theme-light .title,
+.theme-dark .theme-light .value {
+  color: #0f172a;
 }`,
   checks: [
-    { type: 'cssContains', pattern: '@scope.*?to', message: 'A "to" clause is needed to prevent bleed into the legacy view' },
-    { type: 'hasComputedStyle', selector: '.dashboard', property: 'backgroundColor', expected: 'rgb(240, 244, 248)', message: 'Dashboard background is #f0f4f8' },
-    { type: 'hasComputedStyle', selector: '.dashboard > h1', property: 'color', expected: 'rgb(3, 105, 161)', message: 'Dashboard title is colored correctly' },
-    { type: 'hasComputedStyle', selector: '.dashboard > .widget', property: 'padding', expected: '16px', message: 'Dashboard widget has 1rem padding' },
-    { type: 'hasNoComputedStyle', selector: '.legacy-view .widget', property: 'padding', notExpected: '16px', message: 'Legacy view widget is NOT padded by dashboard styles' },
-    { type: 'hasNoComputedStyle', selector: '.legacy-view h1', property: 'color', notExpected: 'rgb(3, 105, 161)', message: 'Legacy view title is NOT colored' },
+    { type: 'cssContains', pattern: '@scope\\s*\\(.*\\.dashboard.*,.*\\.dashboard-sidebar.*\\)', message: 'Use a multiple-roots @scope for .dashboard and .dashboard-sidebar' },
+    { type: 'cssContains', pattern: 'to\\s*\\(\\s*\\.legacy-view\\s*>\\s*\\*\\s*\\)', message: 'Use `to (.legacy-view > *)` so the shell stays in scope but its children do not' },
+    { type: 'cssContains', pattern: '@scope\\s*\\(\\s*\\.theme-light\\s*\\)', message: 'Add a dedicated scope for .theme-light' },
+    { type: 'cssContains', pattern: '@scope\\s*\\(\\s*\\.theme-dark\\s*\\)', message: 'Add a dedicated scope for .theme-dark' },
+    { type: 'hasComputedStyle', selector: '.dashboard', property: 'backgroundColor', expected: 'rgb(240, 244, 248)', message: 'Dashboard root gets the shared surface background' },
+    { type: 'hasComputedStyle', selector: '.dashboard-sidebar', property: 'backgroundColor', expected: 'rgb(240, 244, 248)', message: 'Sidebar root gets the shared surface background too' },
+    { type: 'hasComputedStyle', selector: '.dashboard > h1', property: 'color', expected: 'rgb(3, 105, 161)', message: 'Dashboard heading is colored correctly' },
+    { type: 'hasComputedStyle', selector: '.dashboard-sidebar h2', property: 'color', expected: 'rgb(3, 105, 161)', message: 'Sidebar heading is colored by the same multi-root scope' },
+    { type: 'hasComputedStyle', selector: '.dashboard > .widget.theme-light', property: 'padding', expected: '16px', message: 'In-scope widgets get the white card treatment' },
+    { type: 'hasComputedStyle', selector: '.dashboard > .legacy-view', property: 'borderTopColor', expected: 'rgb(148, 163, 184)', message: 'The legacy-view shell stays in scope and gets the dashed border' },
+    { type: 'hasNoComputedStyle', selector: '.legacy-view .widget', property: 'padding', notExpected: '16px', message: 'The legacy widget stays out of scope and keeps its default padding' },
+    { type: 'hasComputedStyle', selector: '.widget.theme-dark > .value', property: 'color', expected: 'rgb(255, 255, 255)', message: 'Dark-theme widget text becomes white' },
+    { type: 'hasComputedStyle', selector: '.widget.theme-dark .theme-light .value', property: 'color', expected: 'rgb(15, 23, 42)', message: 'The nested light note wins back the light-theme text color via scope proximity' },
   ],
   hints: [
-    'You need a donut scope! `@scope (.dashboard) to (.legacy-view)`',
-    'Use `:scope { ... }` inside your rule block to hit the dashboard container itself.',
-    'Just use `.widget` and `h1` selectors directly inside the block.',
+    'Two outer containers need the same root-level styling. Look for a way to scope both of them without duplicating the whole rule.',
+    'The legacy shell should stay in scope while its children fall out of scope. Think about moving the lower boundary inward instead of stopping at the shell itself.',
+    'You will likely end up with one shared outer scope plus separate theme scopes for the light and dark wrappers.',
   ],
 };
